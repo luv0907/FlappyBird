@@ -198,6 +198,18 @@
       font-size: 0.85rem;
       color: var(--text-muted);
     }
+    .file-info a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .file-info a:hover { text-decoration: underline; }
+
+    .download-status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--accent);
+      min-height: 1.2em;
+    }
 
     .scroll-hint {
       margin-top: 48px;
@@ -387,7 +399,7 @@
     <h1>FlopyBird</h1>
     <p class="tagline">A fun Flappy Bird-style game for Android. Tap, fly, and beat your high score!</p>
 
-    <a class="download-btn" href="https://github.com/luv0907/FlopyBird/releases/latest/download/game.apk" id="downloadBtn">
+    <a class="download-btn" href="https://github.com/luv0907/FlopyBird/releases/latest/download/game.apk" id="downloadBtn" onclick="return startDownload(event)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
         <polyline points="7 10 12 15 17 10"/>
@@ -396,6 +408,8 @@
       Download APK
     </a>
     <p class="file-info">Android • v1.0.0 • 39.2 MB</p>
+    <p class="download-status" id="downloadStatus"></p>
+    <p class="file-info">Download not starting? <a href="https://github.com/luv0907/FlopyBird/releases/tag/v1.0.0" target="_blank">Download from GitHub Releases →</a></p>
 
     <div class="scroll-hint">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -470,7 +484,7 @@
     <div class="container fade-in">
       <h2>Ready to Play?</h2>
       <p>Download FlopyBird now and challenge yourself!</p>
-      <a class="download-btn" href="https://github.com/luv0907/FlopyBird/releases/latest/download/game.apk">
+      <a class="download-btn" href="https://github.com/luv0907/FlopyBird/releases/latest/download/game.apk" onclick="return startDownload(event)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
@@ -479,6 +493,7 @@
         Download APK
       </a>
       <p class="file-info">Android • v1.0.0 • 39.2 MB</p>
+      <p class="file-info">Download not starting? <a href="https://github.com/luv0907/FlopyBird/releases/tag/v1.0.0" target="_blank">Download from GitHub Releases →</a></p>
     </div>
   </section>
 
@@ -509,6 +524,33 @@
     }, { threshold: 0.15 });
 
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Download handler — resolves GitHub redirects first, then triggers a clean download
+    function startDownload(event) {
+      event.preventDefault();
+      const statusEl = document.getElementById('downloadStatus');
+      const apkUrl = 'https://github.com/luv0907/FlopyBird/releases/latest/download/game.apk';
+
+      if (statusEl) statusEl.textContent = 'Preparing download...';
+
+      // Use fetch with redirect:follow to get the final direct URL, then open it
+      fetch(apkUrl, { method: 'HEAD', redirect: 'follow' })
+        .then(response => {
+          // response.url is the final resolved URL after all redirects
+          if (statusEl) statusEl.textContent = 'Starting download...';
+          window.location.href = response.url;
+          setTimeout(() => {
+            if (statusEl) statusEl.textContent = 'Download started! Check your notifications.';
+          }, 2000);
+        })
+        .catch(() => {
+          // If fetch fails (e.g. CORS), fall back to opening the release page directly
+          if (statusEl) statusEl.textContent = 'Opening download page...';
+          window.open('https://github.com/luv0907/FlopyBird/releases/tag/v1.0.0', '_blank');
+        });
+
+      return false;
+    }
   </script>
 </body>
 </html>
