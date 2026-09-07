@@ -1,0 +1,30 @@
+# Unity generated
+Library/
+Temp/
+Builds/
+UserSettings/
+build/
+
+# Visual Studio
+.vs/
+.vscode/
+*.csproj
+*.sln
+*.user
+*.VisualStudio.*
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+Logs/
+*.log
+
+# Local files
+LocalPackages/

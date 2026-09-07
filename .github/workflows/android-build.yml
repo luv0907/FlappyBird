@@ -1,0 +1,34 @@
+name: Android CI Build (APK)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  UNITY_VERSION: 2021.3.0f1 # change to your project's Unity version
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Unity Builder
+        uses: game-ci/unity-builder@v2
+        with:
+          unityVersion: ${{ env.UNITY_VERSION }}
+          targetPlatform: Android
+          buildName: game
+          buildPath: Builds/Android
+          customParameters: -executeMethod BuildMobile.BuildAndroidAPK
+        # Note: This action requires Unity activation. Set secrets as described in the README.
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: Builds/Android/**
