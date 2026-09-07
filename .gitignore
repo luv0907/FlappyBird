@@ -28,3 +28,5 @@ Logs/
 
 # Local files
 LocalPackages/
+.utmp/
+*.slnx

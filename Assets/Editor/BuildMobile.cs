@@ -16,6 +16,12 @@ public static class BuildMobile
     {
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
         EditorUserBuildSettings.buildAppBundle = false;
+        // Use Mono backend (ARMv7)
+        PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android, ScriptingImplementation.Mono2x);
+        PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7;
+        Debug.Log($"Scripting Backend: {PlayerSettings.GetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android)}, Arch: {PlayerSettings.Android.targetArchitectures}");
+        AssetDatabase.SaveAssets();
+
 
         string outDir = "Builds/Android";
         Directory.CreateDirectory(outDir);

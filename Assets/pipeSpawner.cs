@@ -25,6 +25,12 @@ public class pipeSpawner : MonoBehaviour
 
     void Update()
     {
+        // Don't spawn pipes if the game is waiting on the start screen or is game over
+        if (LogicScript.Instance != null && !LogicScript.Instance.IsPlaying())
+        {
+            return;
+        }
+
         timer += Time.deltaTime;
         if (timer >= spawnRate)
         {
