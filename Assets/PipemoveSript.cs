@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class PipemoveSript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public float moveSpeed = 5f;
-    void Start()
-    {
-        
-    }
+    // Horizontal speed (units per second)
+    public float moveSpeed = 3.6f;
 
-    // Update is called once per frame
     void Update()
     {
+        // Don't move pipes if waiting on start screen or game over
+        if (LogicScript.Instance != null && !LogicScript.Instance.IsPlaying()) return;
+
         transform.position += (Vector3.left * moveSpeed) * Time.deltaTime;
+
+        if (transform.position.x < -30f)
+        {
+            Destroy(gameObject);
+        }
     }
 }
